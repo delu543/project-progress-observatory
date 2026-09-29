@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>项目进度观测台</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">◈</span><div><strong>进度观测台</strong><small>PROJECT OBSERVATORY</small></div></div>
+      <div class="project-mini"><span class="eyebrow">当前项目</span><strong id="project-side">载入中</strong><small>每个项目独立保存数据</small></div>
+      <nav aria-label="看板视图">
+        <button data-view="overview" class="active"><span>01</span> 开发总览</button>
+        <button data-view="stages"><span>02</span> 上中下游</button>
+        <button data-view="tasks"><span>03</span> Codex 任务</button>
+        <button data-view="issues"><span>04</span> 问题与要求</button>
+        <button data-view="settings"><span>05</span> 项目设置</button>
+      </nav>
+      <div class="sidebar-foot"><span id="connection-dot" class="dot"></span><span id="connection">连接中</span><small>仅本机 127.0.0.1</small></div>
+    </aside>
+    <main class="content">
+      <header class="topbar"><div><span class="eyebrow">PROJECT / LIVE DEVELOPMENT</span><h1 id="title">项目进度</h1></div><div class="top-actions"><span id="synced" class="sync-label">等待采集</span><button id="reload" class="secondary">↻ 刷新</button></div></header>
+      <div class="notice">代码变化和 Codex 活动会自动刷新。只有附有版本、环境和证据的检查点才计入已验收。</div>
+      <div class="search-row"><label for="search">⌕</label><input id="search" type="search" placeholder="搜索目标、检查点、问题或任务"></div>
+      <div id="view" aria-live="polite"></div>
+      <footer>数据留在当前项目的 <code>.progress-observatory/</code> · 关闭本机服务后停止实时采集</footer>
+    </main>
+  </div>
+  <dialog id="editor"><form method="dialog" id="edit-form"><div class="dialog-head"><span class="eyebrow" id="dialog-kind">编辑</span><button type="button" id="close-dialog" class="icon" aria-label="关闭">×</button></div><h2 id="dialog-title"></h2><div id="dialog-fields"></div><p id="dialog-error" class="error" role="alert"></p><div class="dialog-actions"><button type="button" id="cancel-dialog" class="secondary">取消</button><button type="submit" class="primary">保存到当前项目</button></div></form></dialog>
+  <dialog id="composer"><div class="dialog-head"><span class="eyebrow">CODEX REQUEST</span><button type="button" id="close-composer" class="icon" aria-label="关闭">×</button></div><h2>给 Codex 的要求</h2><p>核对内容后复制，粘贴到对应 Codex 对话。此面板不会自动发送消息。</p><textarea id="request-text" rows="15" aria-label="给 Codex 的要求"></textarea><div class="dialog-actions"><button id="copy-request" class="primary">复制完整要求</button></div></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
