@@ -43,4 +43,7 @@ test('the local API rejects cross-origin writes and stale revisions, then saves 
   assert.equal((await fetch(`${base}/api/board`, { method: 'PUT', headers, body: payload })).status, 409);
   const invalid = structuredClone(edit); invalid.checkpoints[0].status = 'local_verified';
   assert.equal((await fetch(`${base}/api/board`, { method: 'PUT', headers, body: JSON.stringify({ board: invalid, revision: 2 }) })).status, 400);
+  assert.equal((await fetch(`${base}/api/board`, { method: 'PUT', headers, body: 'null' })).status, 400);
+  const recovered = structuredClone(edit); recovered.project.summary = 'Still writable';
+  assert.equal((await fetch(`${base}/api/board`, { method: 'PUT', headers, body: JSON.stringify({ board: recovered, revision: 2 }) })).status, 200);
 });

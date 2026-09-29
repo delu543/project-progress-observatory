@@ -46,12 +46,13 @@ export function validateBoard(board, projectPath) {
   if (!Number.isInteger(board.revision) || board.revision < 1) errors.push('invalid revision');
   if (!board.project || !required(board.project.name, 120) || !clean(board.project.summary) || !clean(board.project.outcome)) errors.push('invalid project');
   if (board.project?.path !== projectPath) errors.push('project path does not match this server');
-  if (!Array.isArray(board.phases) || board.phases.length !== 3 || board.phases.some((phase, i) => phase.id !== phases[i].id)) errors.push('phases must retain three fixed layers');
+  if (!Array.isArray(board.phases) || board.phases.length !== 3 || board.phases.some((phase, i) => phase?.id !== phases[i].id)) errors.push('phases must retain three fixed layers');
   if (!Array.isArray(board.checkpoints) || board.checkpoints.length > 100) errors.push('invalid checkpoints');
   else {
     const ids = new Set();
     for (const item of board.checkpoints) {
       if (!item || !required(item.id, 40) || !/^[A-Za-z0-9_-]+$/.test(item.id) || ids.has(item.id)) errors.push('duplicate or invalid checkpoint id');
+      if (!item) continue;
       ids.add(item?.id);
       if (!phases.some((phase) => phase.id === item.phase) || !required(item.title, 160) || !required(item.outcome, 4000) || !statuses.has(item.status) || !clean(item.owner, 160) || !clean(item.next) || !clean(item.verifiedVersion, 200) || !clean(item.verifiedEnvironment, 200)) errors.push(`invalid checkpoint ${item.id}`);
       if (!Array.isArray(item.evidence) || item.evidence.length > 20 || item.evidence.some((e) => !clean(e, 1000))) errors.push(`invalid evidence ${item.id}`);

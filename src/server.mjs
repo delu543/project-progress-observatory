@@ -90,7 +90,8 @@ export async function startServer(root, port) {
       if (request.method === 'PUT' && pathname === '/api/board') {
         if (request.headers['x-board-csrf'] !== csrf || !request.headers['content-type']?.startsWith('application/json')) { send(response, 403, { error: 'invalid write request' }); return; }
         const input = await bodyJson(request);
-        const result = await (saving = saving.catch(() => {}).then(() => writeBoard(root, input.board, input.revision)));
+        if (!input || !Number.isInteger(input.revision) || !input.board) { send(response, 400, { error: 'invalid board request' }); return; }
+        const result = await (saving = saving.catch(() => {}).then(() => writeBoard(root, input?.board, input?.revision)));
         if (result.conflict) send(response, 409, { error: 'board changed; reload before saving', currentRevision: result.current.revision });
         else { send(response, 200, result.board); broadcast('board', { at: result.board.updatedAt }); }
         return;
